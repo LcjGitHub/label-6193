@@ -16,12 +16,22 @@ const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword, reco
 const { favoriteCount } = storeToRefs(favoriteStore)
 const { historyCount } = storeToRefs(playHistoryStore)
 
+/** 各剧种分组的折叠状态，以剧种名称为 key，true 表示折叠 */
 const collapsedGroups = reactive<Record<string, boolean>>({})
 
+/**
+ * 切换指定剧种分组的折叠状态
+ * @param operaType - 剧种名称
+ */
 function toggleGroup(operaType: string): void {
   collapsedGroups[operaType] = !collapsedGroups[operaType]
 }
 
+/**
+ * 判断指定剧种分组是否处于折叠状态
+ * @param operaType - 剧种名称
+ * @returns 是否已折叠
+ */
 function isGroupCollapsed(operaType: string): boolean {
   return collapsedGroups[operaType] === true
 }
@@ -101,13 +111,13 @@ function handleRefreshRecommendations(): void {
         :key="group.operaType"
         class="opera-group"
       >
-        <div
-          class="group-header"
-          role="button"
-          :aria-label="isGroupCollapsed(group.operaType) ? `展开${group.operaType}` : `收起${group.operaType}`"
-          @click="toggleGroup(group.operaType)"
-        >
-          <div class="group-title-row">
+        <div class="group-header">
+          <div
+            class="group-title-row"
+            role="button"
+            :aria-label="isGroupCollapsed(group.operaType) ? `展开${group.operaType}` : `收起${group.operaType}`"
+            @click="toggleGroup(group.operaType)"
+          >
             <h2 class="group-title">
               {{ group.operaType }}
               <van-icon
@@ -119,7 +129,7 @@ function handleRefreshRecommendations(): void {
               />
             </h2>
             <van-icon
-              :name="isGroupCollapsed(group.operaType) ? 'down' : 'up'"
+              :name="isGroupCollapsed(group.operaType) ? 'arrow-down' : 'arrow-up'"
               class="collapse-icon"
             />
           </div>
@@ -246,13 +256,6 @@ function handleRefreshRecommendations(): void {
 
 .group-header {
   padding: 12px 16px 8px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s;
-}
-
-.group-header:active {
-  background-color: #f7f8fa;
 }
 
 .group-title-row {
@@ -260,6 +263,16 @@ function handleRefreshRecommendations(): void {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 4px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.group-title-row:active {
+  background-color: #f7f8fa;
 }
 
 .group-title {
