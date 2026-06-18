@@ -63,13 +63,13 @@ function goToOperaType(operaType: string): void {
         :key="group.operaType"
         class="opera-group"
       >
-        <div
-          class="group-header"
-          role="button"
-          aria-label="查看剧种详情"
-          @click="goToOperaType(group.operaType)"
-        >
-          <h2 class="group-title">
+        <div class="group-header">
+          <h2
+            class="group-title"
+            role="button"
+            :aria-label="`查看${group.operaType}详情`"
+            @click="goToOperaType(group.operaType)"
+          >
             {{ group.operaType }}
             <van-icon name="arrow" class="title-arrow" />
           </h2>
@@ -151,22 +151,25 @@ function goToOperaType(operaType: string): void {
 
 .group-header {
   padding: 16px 16px 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.group-header:active {
-  background-color: #f7f8fa;
 }
 
 .group-title {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 18px;
   font-weight: 600;
   color: #323233;
   margin-bottom: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.group-title:active {
+  background-color: #f7f8fa;
 }
 
 .title-arrow {

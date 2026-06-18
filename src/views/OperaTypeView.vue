@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useOperaStore } from '@/stores/opera'
 import type { OperaTrack } from '@/types/opera'
@@ -14,11 +14,27 @@ const operaGroup = computed(() => operaStore.getGroupByOperaType(operaType.value
 
 const trackCount = computed(() => operaGroup.value?.tracks.length ?? 0)
 
+watch(
+  operaGroup,
+  (group) => {
+    if (group) {
+      document.title = `${group.operaType} - 剧种详情`
+    } else {
+      document.title = '剧种详情'
+    }
+  },
+  { immediate: true },
+)
+
 /**
  * 返回上一页
  */
 function goBack(): void {
-  router.push({ name: 'home' })
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push({ name: 'home' })
+  }
 }
 
 /**

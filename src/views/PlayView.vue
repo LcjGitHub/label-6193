@@ -20,10 +20,14 @@ const track = computed(() => operaStore.getTrackById(trackId.value))
 const isTrackFavorite = computed(() => favoriteStore.isFavorite(trackId.value))
 
 /**
- * 返回列表页
+ * 返回上一页
  */
 function goBack(): void {
-  router.push({ name: 'home' })
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push({ name: 'home' })
+  }
 }
 
 /**

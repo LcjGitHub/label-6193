@@ -31,10 +31,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  let title = (to.meta.title as string) || '戏曲剧种与唱腔'
-  if (to.name === 'opera-type' && to.params.operaType) {
-    title = `${decodeURIComponent(to.params.operaType as string)} - 剧种详情`
-  }
+  const title = (to.meta.title as string) || '戏曲剧种与唱腔'
   document.title = title
 })
 
