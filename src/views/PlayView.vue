@@ -21,6 +21,14 @@ const track = computed(() => operaStore.getTrackById(trackId.value))
 
 const isTrackFavorite = computed(() => favoriteStore.isFavorite(trackId.value))
 
+const prevTrack = computed(() => operaStore.getPrevTrackInSameOperaType(trackId.value))
+
+const nextTrack = computed(() => operaStore.getNextTrackInSameOperaType(trackId.value))
+
+const hasPrev = computed(() => prevTrack.value !== undefined)
+
+const hasNext = computed(() => nextTrack.value !== undefined)
+
 /**
  * 返回上一页
  */
@@ -38,6 +46,22 @@ function goBack(): void {
 function handleToggleFavorite(): void {
   favoriteStore.toggleFavorite(trackId.value)
   showToast(favoriteStore.isFavorite(trackId.value) ? '已收藏' : '已取消收藏')
+}
+
+/**
+ * 切换到上一曲
+ */
+function handlePrev(): void {
+  if (!hasPrev.value || !prevTrack.value) return
+  router.push({ name: 'play', params: { id: prevTrack.value.id } })
+}
+
+/**
+ * 切换到下一曲
+ */
+function handleNext(): void {
+  if (!hasNext.value || !nextTrack.value) return
+  router.push({ name: 'play', params: { id: nextTrack.value.id } })
 }
 
 /**
@@ -76,6 +100,10 @@ watch(
   trackId,
   (newTrackId) => {
     playHistoryStore.addPlayRecord(newTrackId)
+    isPlaying.value = false
+    if (audioRef.value) {
+      audioRef.value.load()
+    }
   },
 )
 
@@ -135,6 +163,29 @@ onBeforeUnmount(() => {
           >
             您的浏览器不支持 HTML5 音频播放。
           </audio>
+        </div>
+
+        <div class="track-controls">
+          <button
+            class="control-btn prev-btn"
+            :disabled="!hasPrev"
+            :class="{ disabled: !hasPrev }"
+            @click="handlePrev"
+          >
+            <van-icon name="arrow-left" />
+            <span>上一曲</span>
+            <span v-if="prevTrack" class="track-name">{{ prevTrack.title }}</span>
+          </button>
+          <button
+            class="control-btn next-btn"
+            :disabled="!hasNext"
+            :class="{ disabled: !hasNext }"
+            @click="handleNext"
+          >
+            <span v-if="nextTrack" class="track-name">{{ nextTrack.title }}</span>
+            <span>下一曲</span>
+            <van-icon name="arrow" />
+          </button>
         </div>
 
         <van-cell-group inset class="detail-section">
@@ -216,5 +267,77 @@ onBeforeUnmount(() => {
 
 .detail-section {
   margin-top: 8px;
+}
+
+.track-controls {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.control-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: #fff;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn:not(.disabled):hover {
+  background: #f7f8fa;
+  border-color: #1989fa;
+}
+
+.control-btn:not(.disabled):active {
+  background: #e8f2ff;
+}
+
+.control-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.prev-btn {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.next-btn {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.control-btn .van-icon {
+  font-size: 20px;
+  color: #1989fa;
+}
+
+.control-btn.disabled .van-icon {
+  color: #969799;
+}
+
+.control-btn span:nth-child(2) {
+  font-size: 14px;
+  font-weight: 500;
+  color: #323233;
+}
+
+.control-btn.disabled span:nth-child(2) {
+  color: #969799;
+}
+
+.track-name {
+  font-size: 12px;
+  color: #969799;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

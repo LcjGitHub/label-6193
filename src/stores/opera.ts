@@ -131,6 +131,42 @@ export const useOperaStore = defineStore('opera', () => {
     generateRecommendations()
   }
 
+  /**
+   * 获取同剧种中的上一曲目
+   * @param id - 当前曲目 ID
+   * @returns 上一曲目，若为第一首则返回 undefined
+   */
+  function getPrevTrackInSameOperaType(id: string): OperaTrack | undefined {
+    const currentTrack = getTrackById(id)
+    if (!currentTrack) return undefined
+
+    const group = getGroupByOperaType(currentTrack.operaType)
+    if (!group) return undefined
+
+    const index = group.tracks.findIndex((t) => t.id === id)
+    if (index <= 0) return undefined
+
+    return group.tracks[index - 1]
+  }
+
+  /**
+   * 获取同剧种中的下一曲目
+   * @param id - 当前曲目 ID
+   * @returns 下一曲目，若为最后一首则返回 undefined
+   */
+  function getNextTrackInSameOperaType(id: string): OperaTrack | undefined {
+    const currentTrack = getTrackById(id)
+    if (!currentTrack) return undefined
+
+    const group = getGroupByOperaType(currentTrack.operaType)
+    if (!group) return undefined
+
+    const index = group.tracks.findIndex((t) => t.id === id)
+    if (index === -1 || index >= group.tracks.length - 1) return undefined
+
+    return group.tracks[index + 1]
+  }
+
   return {
     tracks,
     searchKeyword,
@@ -145,5 +181,7 @@ export const useOperaStore = defineStore('opera', () => {
     getGroupByOperaType,
     generateRecommendations,
     refreshRecommendations,
+    getPrevTrackInSameOperaType,
+    getNextTrackInSameOperaType,
   }
 })
