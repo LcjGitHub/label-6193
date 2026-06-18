@@ -1,15 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import mockData from '@/mock/opera-tracks.json'
 import type { OperaGroup, OperaTrack } from '@/types/opera'
 
-/**
- * 戏曲曲目状态管理
- */
 export const useOperaStore = defineStore('opera', () => {
   const tracks = mockData.tracks as OperaTrack[]
 
-  /** 按剧种分组的曲目列表 */
+  const searchKeyword = ref('')
+
   const groupedTracks = computed<OperaGroup[]>(() => {
     const groupMap = new Map<string, OperaGroup>()
 
@@ -29,17 +27,45 @@ export const useOperaStore = defineStore('opera', () => {
     return Array.from(groupMap.values())
   })
 
-  /**
-   * 根据 ID 获取曲目
-   * @param id - 曲目 ID
-   */
+  const filteredGroupedTracks = computed<OperaGroup[]>(() => {
+    const keyword = searchKeyword.value.trim().toLowerCase()
+    if (!keyword) return groupedTracks.value
+
+    return groupedTracks.value
+      .map((group) => {
+        const typeMatched = group.operaType.toLowerCase().includes(keyword)
+        const matchedTracks = group.tracks.filter(
+          (track) =>
+            track.title.toLowerCase().includes(keyword) ||
+            track.operaType.toLowerCase().includes(keyword),
+        )
+        if (typeMatched && matchedTracks.length === 0) return group
+        if (matchedTracks.length === 0) return null
+        return { ...group, tracks: matchedTracks }
+      })
+      .filter((g): g is OperaGroup => g !== null)
+  })
+
+  const hasSearchResult = computed(() => filteredGroupedTracks.value.length > 0)
+
+  const isSearching = computed(() => searchKeyword.value.trim().length > 0)
+
+  function setSearchKeyword(keyword: string): void {
+    searchKeyword.value = keyword
+  }
+
   function getTrackById(id: string): OperaTrack | undefined {
     return tracks.find((track) => track.id === id)
   }
 
   return {
     tracks,
+    searchKeyword,
     groupedTracks,
+    filteredGroupedTracks,
+    hasSearchResult,
+    isSearching,
+    setSearchKeyword,
     getTrackById,
   }
 })

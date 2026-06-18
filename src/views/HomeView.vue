@@ -6,14 +6,19 @@ import type { OperaTrack } from '@/types/opera'
 
 const router = useRouter()
 const operaStore = useOperaStore()
-const { groupedTracks } = storeToRefs(operaStore)
+const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword } =
+  storeToRefs(operaStore)
 
-/**
- * 跳转至播放页
- * @param track - 目标曲目
- */
 function goToPlay(track: OperaTrack): void {
   router.push({ name: 'play', params: { id: track.id } })
+}
+
+function onSearchInput(keyword: string): void {
+  operaStore.setSearchKeyword(keyword)
+}
+
+function onSearchClear(): void {
+  operaStore.setSearchKeyword('')
 }
 </script>
 
@@ -21,8 +26,22 @@ function goToPlay(track: OperaTrack): void {
   <div class="home-view">
     <van-nav-bar title="戏曲剧种与唱腔" fixed placeholder />
 
-    <div class="group-list">
-      <section v-for="group in groupedTracks" :key="group.operaType" class="opera-group">
+    <div class="search-bar">
+      <van-search
+        :model-value="searchKeyword"
+        placeholder="搜索曲名或剧种"
+        shape="round"
+        @update:model-value="onSearchInput"
+        @clear="onSearchClear"
+      />
+    </div>
+
+    <div v-if="hasSearchResult" class="group-list">
+      <section
+        v-for="group in filteredGroupedTracks"
+        :key="group.operaType"
+        class="opera-group"
+      >
         <div class="group-header">
           <h2 class="group-title">{{ group.operaType }}</h2>
           <p class="group-desc">{{ group.operaTypeDesc }}</p>
@@ -47,6 +66,11 @@ function goToPlay(track: OperaTrack): void {
         </van-cell-group>
       </section>
     </div>
+
+    <div v-else-if="isSearching" class="empty-state">
+      <van-icon name="search" class="empty-icon" />
+      <p class="empty-text">未找到匹配的曲目或剧种</p>
+    </div>
   </div>
 </template>
 
@@ -56,8 +80,12 @@ function goToPlay(track: OperaTrack): void {
   padding-bottom: 24px;
 }
 
+.search-bar {
+  padding: 0 0 4px;
+}
+
 .group-list {
-  padding-top: 8px;
+  padding-top: 4px;
 }
 
 .opera-group {
@@ -90,5 +118,24 @@ function goToPlay(track: OperaTrack): void {
 .play-icon {
   font-size: 22px;
   color: #1989fa;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 16px 0;
+}
+
+.empty-icon {
+  font-size: 64px;
+  color: #dcdee0;
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #969799;
 }
 </style>
