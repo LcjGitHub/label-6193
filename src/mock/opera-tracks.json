@@ -1,0 +1,124 @@
+{
+  "tracks": [
+    {
+      "id": "jing-1",
+      "title": "贵妃醉酒",
+      "operaType": "京剧",
+      "operaTypeDesc": "国粹艺术，唱腔高亢嘹亮，行当分工精细，以皮黄腔为主。",
+      "vocalStyle": "西皮流畅明快，二黄沉稳抒情；旦角唱腔圆润华丽，拖腔悠长，讲究字正腔圆与板式变化。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "jing-2",
+      "title": "霸王别姬",
+      "operaType": "京剧",
+      "operaTypeDesc": "国粹艺术，唱腔高亢嘹亮，行当分工精细，以皮黄腔为主。",
+      "vocalStyle": "旦角唱腔以青衣为主，哀婉凄美；花脸唱腔雄浑厚重，与旦角形成强烈对比。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "jing-3",
+      "title": "空城计",
+      "operaType": "京剧",
+      "operaTypeDesc": "国粹艺术，唱腔高亢嘹亮，行当分工精细，以皮黄腔为主。",
+      "vocalStyle": "老生唱腔苍劲沉稳，散板与流水板交替，突出人物智谋与从容气度。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "kun-1",
+      "title": "牡丹亭·游园",
+      "operaType": "昆曲",
+      "operaTypeDesc": "中国最古老的剧种之一，曲词典雅，水磨腔细腻婉转。",
+      "vocalStyle": "水磨腔一字多腔，声腔缠绵悠远；杜丽娘唱腔清丽柔媚，注重气息与咬字韵味。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "kun-2",
+      "title": "长生殿·小宴",
+      "operaType": "昆曲",
+      "operaTypeDesc": "中国最古老的剧种之一，曲词典雅，水磨腔细腻婉转。",
+      "vocalStyle": "宫调曲牌结构严谨，唱腔典雅含蓄，行腔如行云流水，讲究曲情与身段合一。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "kun-3",
+      "title": "桃花扇·哀江南",
+      "operaType": "昆曲",
+      "operaTypeDesc": "中国最古老的剧种之一，曲词典雅，水磨腔细腻婉转。",
+      "vocalStyle": "北曲与南曲交融，哀婉深沉，拖腔处尤显水磨特色，情感层层递进。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yue-1",
+      "title": "梁山伯与祝英台",
+      "operaType": "越剧",
+      "operaTypeDesc": "发源于浙江，唱腔柔美动听，以小生、花旦见长，素有「第二国剧」之称。",
+      "vocalStyle": "尺调腔柔和抒情，旋律优美流畅；祝英台唱腔凄美动人，注重真假声自然过渡。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yue-2",
+      "title": "红楼梦",
+      "operaType": "越剧",
+      "operaTypeDesc": "发源于浙江，唱腔柔美动听，以小生、花旦见长，素有「第二国剧」之称。",
+      "vocalStyle": "林黛玉唱腔哀婉细腻，行腔轻盈；宝玉唱腔温润儒雅，曲牌板式富于变化。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yue-3",
+      "title": "西厢记",
+      "operaType": "越剧",
+      "operaTypeDesc": "发源于浙江，唱腔柔美动听，以小生、花旦见长，素有「第二国剧」之称。",
+      "vocalStyle": "崔莺莺唱腔含蓄婉转，张生唱腔清亮洒脱，对唱部分和谐呼应，情感表达细腻。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "huang-1",
+      "title": "天仙配",
+      "operaType": "黄梅戏",
+      "operaTypeDesc": "起源于安徽安庆，唱腔淳朴清新，生活气息浓郁，易于传唱。",
+      "vocalStyle": "唱腔质朴自然，旋律朗朗上口；七仙女唱腔甜美亲切，董永唱腔憨厚真诚。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "huang-2",
+      "title": "女驸马",
+      "operaType": "黄梅戏",
+      "operaTypeDesc": "起源于安徽安庆，唱腔淳朴清新，生活气息浓郁，易于传唱。",
+      "vocalStyle": "冯素珍唱腔明快爽朗，花腔运用灵活；对唱部分节奏鲜明，富有民间小调韵味。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "huang-3",
+      "title": "打猪草",
+      "operaType": "黄梅戏",
+      "operaTypeDesc": "起源于安徽安庆，唱腔淳朴清新，生活气息浓郁，易于传唱。",
+      "vocalStyle": "小戏唱腔活泼俏皮，生活化气息浓厚，念白与唱腔紧密结合，幽默风趣。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yu-1",
+      "title": "花木兰",
+      "operaType": "豫剧",
+      "operaTypeDesc": "流行于河南一带，唱腔高亢激越，节奏鲜明，具有浓郁中原特色。",
+      "vocalStyle": "豫剧唱腔大气豪放，二八板与慢板交替；花木兰唱腔英气勃发，吐字清晰有力。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yu-2",
+      "title": "朝阳沟",
+      "operaType": "豫剧",
+      "operaTypeDesc": "流行于河南一带，唱腔高亢激越，节奏鲜明，具有浓郁中原特色。",
+      "vocalStyle": "现代戏唱腔朴实亲切，融入河南方言韵味；银环唱腔活泼明快，栓保唱腔憨厚敦实。",
+      "audioUrl": "/audio/placeholder.mp3"
+    },
+    {
+      "id": "yu-3",
+      "title": "穆桂英挂帅",
+      "operaType": "豫剧",
+      "operaTypeDesc": "流行于河南一带，唱腔高亢激越，节奏鲜明，具有浓郁中原特色。",
+      "vocalStyle": "穆桂英唱腔铿锵有力，大段唱腔气势磅礴；慢板处沉稳庄重，快板处激昂豪迈。",
+      "audioUrl": "/audio/placeholder.mp3"
+    }
+  ]
+}
