@@ -27,3 +27,17 @@ export interface OperaGroup {
   /** 该剧种下的曲目 */
   tracks: OperaTrack[]
 }
+
+/**
+ * 搜索状态数据结构
+ */
+export interface OperaSearchState {
+  /** 搜索关键词 */
+  keyword: string
+  /** 是否处于搜索状态（关键词非空） */
+  isSearching: boolean
+  /** 是否有匹配的搜索结果 */
+  hasResult: boolean
+  /** 搜索过滤后的分组列表 */
+  results: OperaGroup[]
+}

@@ -9,16 +9,12 @@ const operaStore = useOperaStore()
 const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword } =
   storeToRefs(operaStore)
 
+/**
+ * 跳转至播放页
+ * @param track - 目标曲目
+ */
 function goToPlay(track: OperaTrack): void {
   router.push({ name: 'play', params: { id: track.id } })
-}
-
-function onSearchInput(keyword: string): void {
-  operaStore.setSearchKeyword(keyword)
-}
-
-function onSearchClear(): void {
-  operaStore.setSearchKeyword('')
 }
 </script>
 
@@ -28,11 +24,11 @@ function onSearchClear(): void {
 
     <div class="search-bar">
       <van-search
-        :model-value="searchKeyword"
+        v-model="searchKeyword"
         placeholder="搜索曲名或剧种"
         shape="round"
-        @update:model-value="onSearchInput"
-        @clear="onSearchClear"
+        clearable
+        clear-trigger="always"
       />
     </div>
 
