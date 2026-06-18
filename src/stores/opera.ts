@@ -3,6 +3,9 @@ import { computed, ref } from 'vue'
 import mockData from '@/mock/opera-tracks.json'
 import type { OperaGroup, OperaSearchState, OperaTrack } from '@/types/opera'
 
+/** 固定剧种顺序列表 */
+const OPERA_TYPE_ORDER = ['京剧', '昆曲', '越剧', '黄梅戏', '豫剧']
+
 /**
  * 戏曲曲目状态管理
  */
@@ -19,7 +22,7 @@ export const useOperaStore = defineStore('opera', () => {
   /** 推荐曲目列表 */
   const recommendedTracks = ref<OperaTrack[]>([])
 
-  /** 按剧种分组的曲目列表 */
+  /** 按剧种分组的曲目列表（按固定顺序排列） */
   const groupedTracks = computed<OperaGroup[]>(() => {
     const groupMap = new Map<string, OperaGroup>()
 
@@ -36,14 +39,18 @@ export const useOperaStore = defineStore('opera', () => {
       }
     }
 
-    return Array.from(groupMap.values())
+    return OPERA_TYPE_ORDER
+      .filter((type) => groupMap.has(type))
+      .map((type) => groupMap.get(type)!)
   })
 
   /**
-   * 所有剧种名称列表
+   * 所有剧种名称列表（固定顺序）
    */
   const operaTypes = computed<string[]>(() => {
-    return groupedTracks.value.map((group) => group.operaType)
+    return OPERA_TYPE_ORDER.filter((type) =>
+      groupedTracks.value.some((group) => group.operaType === type),
+    )
   })
 
   /**
@@ -103,6 +110,7 @@ export const useOperaStore = defineStore('opera', () => {
    */
   function setSelectedOperaType(operaType: string): void {
     selectedOperaType.value = operaType
+    generateRecommendations()
   }
 
   /**
@@ -133,12 +141,25 @@ export const useOperaStore = defineStore('opera', () => {
 
   /**
    * 生成随机推荐曲目
-   * 从全部曲目中随机抽取三条不同剧种的曲目
+   * 若选中了某一剧种，则只从该剧种中抽取；未选时保持跨剧种随机推荐
    */
   function generateRecommendations(): void {
     const groups = groupedTracks.value
     if (groups.length === 0) {
       recommendedTracks.value = []
+      return
+    }
+
+    if (selectedOperaType.value) {
+      const targetGroup = groups.find(
+        (group) => group.operaType === selectedOperaType.value,
+      )
+      if (!targetGroup) {
+        recommendedTracks.value = []
+        return
+      }
+      const pool = [...targetGroup.tracks].sort(() => Math.random() - 0.5)
+      recommendedTracks.value = pool.slice(0, Math.min(3, pool.length))
       return
     }
 
