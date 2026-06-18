@@ -4,11 +4,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { useOperaStore } from '@/stores/opera'
 import { useFavoriteStore } from '@/stores/favorite'
+import { usePlayHistoryStore } from '@/stores/playHistory'
 
 const route = useRoute()
 const router = useRouter()
 const operaStore = useOperaStore()
 const favoriteStore = useFavoriteStore()
+const playHistoryStore = usePlayHistoryStore()
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
@@ -60,6 +62,8 @@ function handleEnded(): void {
 }
 
 onMounted(() => {
+  playHistoryStore.addPlayRecord(trackId.value)
+
   const audio = audioRef.value
   if (!audio) return
 

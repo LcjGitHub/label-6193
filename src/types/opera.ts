@@ -41,3 +41,17 @@ export interface OperaSearchState {
   /** 搜索过滤后的分组列表 */
   results: OperaGroup[]
 }
+
+/**
+ * 播放记录数据结构
+ */
+export interface PlayHistoryRecord {
+  /** 曲目唯一标识 */
+  trackId: string
+  /** 曲目标题 */
+  title: string
+  /** 剧种名称 */
+  operaType: string
+  /** 播放时间戳（毫秒） */
+  playedAt: number
+}

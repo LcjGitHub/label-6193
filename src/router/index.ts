@@ -22,6 +22,12 @@ const router = createRouter({
       meta: { title: '我的收藏' },
     },
     {
+      path: '/play-history',
+      name: 'play-history',
+      component: () => import('@/views/PlayHistoryView.vue'),
+      meta: { title: '最近播放' },
+    },
+    {
       path: '/opera-type/:operaType',
       name: 'opera-type',
       component: () => import('@/views/OperaTypeView.vue'),
