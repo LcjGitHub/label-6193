@@ -11,7 +11,7 @@ const router = useRouter()
 const operaStore = useOperaStore()
 const favoriteStore = useFavoriteStore()
 const playHistoryStore = usePlayHistoryStore()
-const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword, recommendedTracks } =
+const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword, recommendedTracks, operaTypes, selectedOperaType } =
   storeToRefs(operaStore)
 const { favoriteCount } = storeToRefs(favoriteStore)
 const { historyCount } = storeToRefs(playHistoryStore)
@@ -76,6 +76,18 @@ function goToOperaType(operaType: string): void {
 function handleRefreshRecommendations(): void {
   operaStore.refreshRecommendations()
 }
+
+/**
+ * 处理剧种标签点击
+ * @param type - 选中的剧种名称，'全部' 表示显示所有
+ */
+function handleOperaTypeClick(type: string): void {
+  if (type === '全部') {
+    operaStore.setSelectedOperaType('')
+  } else {
+    operaStore.setSelectedOperaType(type)
+  }
+}
 </script>
 
 <template>
@@ -103,6 +115,22 @@ function handleRefreshRecommendations(): void {
         clearable
         clear-trigger="always"
       />
+    </div>
+
+    <div class="opera-type-tabs">
+      <div class="tabs-scroll">
+        <span
+          v-for="type in ['全部', ...operaTypes]"
+          :key="type"
+          class="tab-item"
+          :class="{ active: (type === '全部' && !selectedOperaType) || (type === selectedOperaType) }"
+          role="button"
+          :aria-label="`筛选${type}`"
+          @click="handleOperaTypeClick(type)"
+        >
+          {{ type }}
+        </span>
+      </div>
     </div>
 
     <div v-if="hasSearchResult" class="group-list">
@@ -244,6 +272,45 @@ function handleRefreshRecommendations(): void {
 
 .search-bar {
   padding: 0 0 4px;
+}
+
+.opera-type-tabs {
+  padding: 8px 0 12px;
+}
+
+.tabs-scroll {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-size: 14px;
+  color: #646566;
+  background-color: #f7f8fa;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.tab-item:active {
+  transform: scale(0.95);
+}
+
+.tab-item.active {
+  color: #fff;
+  background-color: #1989fa;
+  font-weight: 500;
 }
 
 .group-list {

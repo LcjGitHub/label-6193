@@ -13,6 +13,9 @@ export const useOperaStore = defineStore('opera', () => {
   /** 搜索关键词 */
   const searchKeyword = ref('')
 
+  /** 当前选中的剧种筛选标签，空字符串表示全部 */
+  const selectedOperaType = ref('')
+
   /** 推荐曲目列表 */
   const recommendedTracks = ref<OperaTrack[]>([])
 
@@ -37,14 +40,27 @@ export const useOperaStore = defineStore('opera', () => {
   })
 
   /**
-   * 根据搜索关键词过滤后的分组曲目列表
-   * 匹配规则：曲目标题包含关键词 或 剧种名称包含关键词
+   * 所有剧种名称列表
+   */
+  const operaTypes = computed<string[]>(() => {
+    return groupedTracks.value.map((group) => group.operaType)
+  })
+
+  /**
+   * 根据剧种筛选和搜索关键词过滤后的分组曲目列表
+   * 匹配规则：先按剧种筛选，再按搜索关键词过滤
    */
   const filteredGroupedTracks = computed<OperaGroup[]>(() => {
-    const keyword = searchKeyword.value.trim().toLowerCase()
-    if (!keyword) return groupedTracks.value
+    let result = groupedTracks.value
 
-    return groupedTracks.value
+    if (selectedOperaType.value) {
+      result = result.filter((group) => group.operaType === selectedOperaType.value)
+    }
+
+    const keyword = searchKeyword.value.trim().toLowerCase()
+    if (!keyword) return result
+
+    return result
       .map((group) => {
         const typeMatched = group.operaType.toLowerCase().includes(keyword)
         const matchedTracks = group.tracks.filter(
@@ -79,6 +95,14 @@ export const useOperaStore = defineStore('opera', () => {
    */
   function setSearchKeyword(keyword: string): void {
     searchKeyword.value = keyword
+  }
+
+  /**
+   * 设置选中的剧种筛选标签
+   * @param operaType - 剧种名称，空字符串表示全部
+   */
+  function setSelectedOperaType(operaType: string): void {
+    selectedOperaType.value = operaType
   }
 
   /**
@@ -170,13 +194,16 @@ export const useOperaStore = defineStore('opera', () => {
   return {
     tracks,
     searchKeyword,
+    selectedOperaType,
     recommendedTracks,
     groupedTracks,
+    operaTypes,
     filteredGroupedTracks,
     hasSearchResult,
     isSearching,
     searchState,
     setSearchKeyword,
+    setSelectedOperaType,
     getTrackById,
     getGroupByOperaType,
     generateRecommendations,
