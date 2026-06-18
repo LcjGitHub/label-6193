@@ -26,6 +26,14 @@ function goToPlay(track: OperaTrack): void {
 function goToFavorite(): void {
   router.push({ name: 'favorite' })
 }
+
+/**
+ * 跳转至剧种详情页
+ * @param operaType - 剧种名称
+ */
+function goToOperaType(operaType: string): void {
+  router.push({ name: 'opera-type', params: { operaType } })
+}
 </script>
 
 <template>
@@ -55,8 +63,16 @@ function goToFavorite(): void {
         :key="group.operaType"
         class="opera-group"
       >
-        <div class="group-header">
-          <h2 class="group-title">{{ group.operaType }}</h2>
+        <div
+          class="group-header"
+          role="button"
+          aria-label="查看剧种详情"
+          @click="goToOperaType(group.operaType)"
+        >
+          <h2 class="group-title">
+            {{ group.operaType }}
+            <van-icon name="arrow" class="title-arrow" />
+          </h2>
           <p class="group-desc">{{ group.operaTypeDesc }}</p>
         </div>
 
@@ -135,13 +151,27 @@ function goToFavorite(): void {
 
 .group-header {
   padding: 16px 16px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.group-header:active {
+  background-color: #f7f8fa;
 }
 
 .group-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 18px;
   font-weight: 600;
   color: #323233;
   margin-bottom: 4px;
+}
+
+.title-arrow {
+  font-size: 14px;
+  color: #969799;
 }
 
 .group-desc {

@@ -21,11 +21,20 @@ const router = createRouter({
       component: () => import('@/views/FavoriteView.vue'),
       meta: { title: '我的收藏' },
     },
+    {
+      path: '/opera-type/:operaType',
+      name: 'opera-type',
+      component: () => import('@/views/OperaTypeView.vue'),
+      meta: { title: '剧种详情' },
+    },
   ],
 })
 
 router.afterEach((to) => {
-  const title = (to.meta.title as string) || '戏曲剧种与唱腔'
+  let title = (to.meta.title as string) || '戏曲剧种与唱腔'
+  if (to.name === 'opera-type' && to.params.operaType) {
+    title = `${decodeURIComponent(to.params.operaType as string)} - 剧种详情`
+  }
   document.title = title
 })
 

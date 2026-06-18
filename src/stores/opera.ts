@@ -86,6 +86,15 @@ export const useOperaStore = defineStore('opera', () => {
     return tracks.find((track) => track.id === id)
   }
 
+  /**
+   * 根据剧种名称获取该剧种的分组信息
+   * @param operaType - 剧种名称
+   * @returns 剧种分组对象，包含剧种名称、简介和曲目列表
+   */
+  function getGroupByOperaType(operaType: string): OperaGroup | undefined {
+    return groupedTracks.value.find((group) => group.operaType === operaType)
+  }
+
   return {
     tracks,
     searchKeyword,
@@ -96,5 +105,6 @@ export const useOperaStore = defineStore('opera', () => {
     searchState,
     setSearchKeyword,
     getTrackById,
+    getGroupByOperaType,
   }
 })
