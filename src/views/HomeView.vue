@@ -136,7 +136,7 @@ function handleRefreshRecommendations(): void {
             @click="handleRefreshRecommendations"
           >
             <van-icon name="replay" class="refresh-icon" />
-            <span class="refresh-text">换一批</span>
+            <span class="refresh-text">刷新</span>
           </div>
         </div>
 
@@ -145,6 +145,7 @@ function handleRefreshRecommendations(): void {
             v-for="track in recommendedTracks"
             :key="track.id"
             :title="track.title"
+            :aria-label="`播放${track.title}，${track.operaType}`"
             is-link
             @click="goToPlay(track)"
           >
