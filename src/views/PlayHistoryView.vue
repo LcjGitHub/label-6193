@@ -9,19 +9,13 @@ const router = useRouter()
 const playHistoryStore = usePlayHistoryStore()
 const { sortedHistoryRecords, historyCount } = storeToRefs(playHistoryStore)
 
+/**
+ * 格式化播放时间为日期时间字符串（月-日 时:分）
+ * @param timestamp - 播放时间戳（毫秒）
+ * @returns 格式化后的日期时间字符串
+ */
 function formatPlayedAtText(timestamp: number): string {
   const date = new Date(timestamp)
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMs / 3600000)
-  const diffDays = Math.floor(diffMs / 86400000)
-
-  if (diffMins < 1) return '刚刚'
-  if (diffMins < 60) return `${diffMins} 分钟前`
-  if (diffHours < 24) return `${diffHours} 小时前`
-  if (diffDays < 7) return `${diffDays} 天前`
-
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   const hours = String(date.getHours()).padStart(2, '0')
@@ -29,14 +23,24 @@ function formatPlayedAtText(timestamp: number): string {
   return `${month}-${day} ${hours}:${mins}`
 }
 
+/**
+ * 跳转至播放页
+ * @param record - 播放记录
+ */
 function goToPlay(record: PlayHistoryRecord): void {
   router.push({ name: 'play', params: { id: record.trackId } })
 }
 
+/**
+ * 返回首页
+ */
 function goBack(): void {
   router.push({ name: 'home' })
 }
 
+/**
+ * 清空播放记录并弹出提示
+ */
 async function handleClearHistory(): Promise<void> {
   try {
     await showConfirmDialog({

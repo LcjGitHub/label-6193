@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { useOperaStore } from '@/stores/opera'
@@ -71,6 +71,15 @@ onMounted(() => {
   audio.addEventListener('pause', handlePause)
   audio.addEventListener('ended', handleEnded)
 })
+
+watch(
+  trackId,
+  (newTrackId) => {
+    playHistoryStore.addPlayRecord(newTrackId)
+  },
+)
+
+
 
 onBeforeUnmount(() => {
   const audio = audioRef.value
