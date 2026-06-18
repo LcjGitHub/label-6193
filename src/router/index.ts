@@ -15,6 +15,12 @@ const router = createRouter({
       component: () => import('@/views/PlayView.vue'),
       meta: { title: '曲目播放' },
     },
+    {
+      path: '/favorite',
+      name: 'favorite',
+      component: () => import('@/views/FavoriteView.vue'),
+      meta: { title: '我的收藏' },
+    },
   ],
 })
 

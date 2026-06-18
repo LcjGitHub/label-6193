@@ -2,12 +2,15 @@
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useOperaStore } from '@/stores/opera'
+import { useFavoriteStore } from '@/stores/favorite'
 import type { OperaTrack } from '@/types/opera'
 
 const router = useRouter()
 const operaStore = useOperaStore()
+const favoriteStore = useFavoriteStore()
 const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword } =
   storeToRefs(operaStore)
+const { favoriteCount } = storeToRefs(favoriteStore)
 
 /**
  * 跳转至播放页
@@ -16,11 +19,25 @@ const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword } =
 function goToPlay(track: OperaTrack): void {
   router.push({ name: 'play', params: { id: track.id } })
 }
+
+/**
+ * 跳转至收藏页
+ */
+function goToFavorite(): void {
+  router.push({ name: 'favorite' })
+}
 </script>
 
 <template>
   <div class="home-view">
-    <van-nav-bar title="戏曲剧种与唱腔" fixed placeholder />
+    <van-nav-bar title="戏曲剧种与唱腔" fixed placeholder>
+      <template #right>
+        <div class="nav-favorite" @click="goToFavorite">
+          <van-icon name="star-o" class="nav-favorite-icon" />
+          <span v-if="favoriteCount > 0" class="nav-favorite-badge">{{ favoriteCount }}</span>
+        </div>
+      </template>
+    </van-nav-bar>
 
     <div class="search-bar">
       <van-search
@@ -74,6 +91,34 @@ function goToPlay(track: OperaTrack): void {
 .home-view {
   min-height: 100vh;
   padding-bottom: 24px;
+}
+
+.nav-favorite {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.nav-favorite-icon {
+  font-size: 20px;
+  color: #646566;
+}
+
+.nav-favorite-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  background-color: #ee0a24;
+  border-radius: 8px;
 }
 
 .search-bar {

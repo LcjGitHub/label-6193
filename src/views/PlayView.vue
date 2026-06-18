@@ -2,10 +2,12 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useOperaStore } from '@/stores/opera'
+import { useFavoriteStore } from '@/stores/favorite'
 
 const route = useRoute()
 const router = useRouter()
 const operaStore = useOperaStore()
+const favoriteStore = useFavoriteStore()
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
@@ -14,11 +16,20 @@ const trackId = computed(() => route.params.id as string)
 
 const track = computed(() => operaStore.getTrackById(trackId.value))
 
+const isTrackFavorite = computed(() => favoriteStore.isFavorite(trackId.value))
+
 /**
  * 返回列表页
  */
 function goBack(): void {
   router.push({ name: 'home' })
+}
+
+/**
+ * 切换收藏状态
+ */
+function handleToggleFavorite(): void {
+  favoriteStore.toggleFavorite(trackId.value)
 }
 
 /**
@@ -85,6 +96,12 @@ onBeforeUnmount(() => {
             :class="{ playing: isPlaying }"
           />
           <span class="status-text">{{ isPlaying ? '正在播放' : '已暂停' }}</span>
+          <van-icon
+            :name="isTrackFavorite ? 'star' : 'star-o'"
+            class="favorite-icon"
+            :class="{ favorited: isTrackFavorite }"
+            @click="handleToggleFavorite"
+          />
         </div>
 
         <div class="audio-wrapper">
@@ -154,6 +171,17 @@ onBeforeUnmount(() => {
 .status-text {
   font-size: 14px;
   color: #646566;
+}
+
+.favorite-icon {
+  margin-left: auto;
+  font-size: 24px;
+  color: #dcdee0;
+  transition: color 0.2s;
+}
+
+.favorite-icon.favorited {
+  color: #ff976a;
 }
 
 .audio-wrapper {
