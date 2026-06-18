@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { showToast } from 'vant'
 import { useOperaStore } from '@/stores/opera'
 import { useFavoriteStore } from '@/stores/favorite'
 
@@ -26,10 +27,11 @@ function goBack(): void {
 }
 
 /**
- * 切换收藏状态
+ * 切换收藏状态并弹出提示
  */
 function handleToggleFavorite(): void {
   favoriteStore.toggleFavorite(trackId.value)
+  showToast(favoriteStore.isFavorite(trackId.value) ? '已收藏' : '已取消收藏')
 }
 
 /**
@@ -100,6 +102,8 @@ onBeforeUnmount(() => {
             :name="isTrackFavorite ? 'star' : 'star-o'"
             class="favorite-icon"
             :class="{ favorited: isTrackFavorite }"
+            role="button"
+            :aria-label="isTrackFavorite ? '取消收藏' : '加入收藏'"
             @click="handleToggleFavorite"
           />
         </div>

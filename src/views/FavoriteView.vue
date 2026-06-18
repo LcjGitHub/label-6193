@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { showToast } from 'vant'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useFavoriteStore } from '@/stores/favorite'
@@ -8,17 +9,30 @@ const router = useRouter()
 const favoriteStore = useFavoriteStore()
 const { favoriteTracks, favoriteCount } = storeToRefs(favoriteStore)
 
+/**
+ * 跳转至播放页
+ * @param track - 目标曲目
+ */
 function goToPlay(track: OperaTrack): void {
   router.push({ name: 'play', params: { id: track.id } })
 }
 
+/**
+ * 返回首页
+ */
 function goBack(): void {
   router.push({ name: 'home' })
 }
 
+/**
+ * 取消收藏并弹出提示
+ * @param trackId - 要取消收藏的曲目 ID
+ * @param event - 点击事件对象，用于阻止冒泡
+ */
 function handleRemoveFavorite(trackId: string, event: Event): void {
   event.stopPropagation()
   favoriteStore.removeFavorite(trackId)
+  showToast('已取消收藏')
 }
 </script>
 
@@ -32,7 +46,7 @@ function handleRemoveFavorite(trackId: string, event: Event): void {
       @click-left="goBack"
     >
       <template #right>
-        <span class="nav-count">{{ favoriteCount }}</span>
+        <span class="nav-count-label">{{ favoriteCount }} 首</span>
       </template>
     </van-nav-bar>
 
@@ -43,7 +57,6 @@ function handleRemoveFavorite(trackId: string, event: Event): void {
           :key="track.id"
           :title="track.title"
           :label="track.vocalStyle"
-          is-link
           @click="goToPlay(track)"
         >
           <template #icon>
@@ -51,8 +64,9 @@ function handleRemoveFavorite(trackId: string, event: Event): void {
           </template>
           <template #right-icon>
             <van-icon
-              name="star"
+              name="delete-o"
               class="remove-icon"
+              aria-label="取消收藏"
               @click="handleRemoveFavorite(track.id, $event)"
             />
           </template>
@@ -73,7 +87,7 @@ function handleRemoveFavorite(trackId: string, event: Event): void {
   min-height: 100vh;
 }
 
-.nav-count {
+.nav-count-label {
   font-size: 14px;
   color: #969799;
 }
@@ -90,7 +104,7 @@ function handleRemoveFavorite(trackId: string, event: Event): void {
 
 .remove-icon {
   font-size: 20px;
-  color: #ee0a24;
+  color: #969799;
   padding: 8px;
 }
 </style>

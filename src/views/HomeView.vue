@@ -32,7 +32,7 @@ function goToFavorite(): void {
   <div class="home-view">
     <van-nav-bar title="戏曲剧种与唱腔" fixed placeholder>
       <template #right>
-        <div class="nav-favorite" @click="goToFavorite">
+        <div class="nav-favorite" role="button" aria-label="我的收藏" @click="goToFavorite">
           <van-icon name="star-o" class="nav-favorite-icon" />
           <span v-if="favoriteCount > 0" class="nav-favorite-badge">{{ favoriteCount }}</span>
         </div>
