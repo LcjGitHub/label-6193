@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useOperaStore } from '@/stores/opera'
@@ -15,6 +15,16 @@ const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword, reco
   storeToRefs(operaStore)
 const { favoriteCount } = storeToRefs(favoriteStore)
 const { historyCount } = storeToRefs(playHistoryStore)
+
+const collapsedGroups = reactive<Record<string, boolean>>({})
+
+function toggleGroup(operaType: string): void {
+  collapsedGroups[operaType] = !collapsedGroups[operaType]
+}
+
+function isGroupCollapsed(operaType: string): boolean {
+  return collapsedGroups[operaType] === true
+}
 
 onMounted(() => {
   operaStore.generateRecommendations()
@@ -91,20 +101,32 @@ function handleRefreshRecommendations(): void {
         :key="group.operaType"
         class="opera-group"
       >
-        <div class="group-header">
-          <h2
-            class="group-title"
-            role="button"
-            :aria-label="`查看${group.operaType}详情`"
-            @click="goToOperaType(group.operaType)"
-          >
-            {{ group.operaType }}
-            <van-icon name="arrow" class="title-arrow" />
-          </h2>
+        <div
+          class="group-header"
+          role="button"
+          :aria-label="isGroupCollapsed(group.operaType) ? `展开${group.operaType}` : `收起${group.operaType}`"
+          @click="toggleGroup(group.operaType)"
+        >
+          <div class="group-title-row">
+            <h2 class="group-title">
+              {{ group.operaType }}
+              <van-icon
+                name="arrow"
+                class="title-arrow"
+                role="button"
+                :aria-label="`查看${group.operaType}详情`"
+                @click.stop="goToOperaType(group.operaType)"
+              />
+            </h2>
+            <van-icon
+              :name="isGroupCollapsed(group.operaType) ? 'down' : 'up'"
+              class="collapse-icon"
+            />
+          </div>
           <p class="group-desc">{{ group.operaTypeDesc }}</p>
         </div>
 
-        <van-cell-group inset>
+        <van-cell-group inset v-show="!isGroupCollapsed(group.operaType)">
           <van-cell
             v-for="track in group.tracks"
             :key="track.id"
@@ -223,7 +245,21 @@ function handleRefreshRecommendations(): void {
 }
 
 .group-header {
-  padding: 16px 16px 8px;
+  padding: 12px 16px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.group-header:active {
+  background-color: #f7f8fa;
+}
+
+.group-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 .group-title {
@@ -233,21 +269,24 @@ function handleRefreshRecommendations(): void {
   font-size: 18px;
   font-weight: 600;
   color: #323233;
-  margin-bottom: 4px;
-  cursor: pointer;
-  padding: 4px 8px;
-  margin-left: -8px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.group-title:active {
-  background-color: #f7f8fa;
+  margin: 0;
 }
 
 .title-arrow {
   font-size: 14px;
   color: #969799;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.title-arrow:active {
+  background-color: #ebedf0;
+}
+
+.collapse-icon {
+  font-size: 16px;
+  color: #969799;
+  transition: transform 0.2s;
 }
 
 .group-desc {
