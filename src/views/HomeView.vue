@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useOperaStore } from '@/stores/opera'
@@ -10,10 +11,14 @@ const router = useRouter()
 const operaStore = useOperaStore()
 const favoriteStore = useFavoriteStore()
 const playHistoryStore = usePlayHistoryStore()
-const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword } =
+const { filteredGroupedTracks, hasSearchResult, isSearching, searchKeyword, recommendedTracks } =
   storeToRefs(operaStore)
 const { favoriteCount } = storeToRefs(favoriteStore)
 const { historyCount } = storeToRefs(playHistoryStore)
+
+onMounted(() => {
+  operaStore.generateRecommendations()
+})
 
 /**
  * 跳转至播放页
@@ -43,6 +48,13 @@ function goToPlayHistory(): void {
  */
 function goToOperaType(operaType: string): void {
   router.push({ name: 'opera-type', params: { operaType } })
+}
+
+/**
+ * 刷新推荐曲目
+ */
+function handleRefreshRecommendations(): void {
+  operaStore.refreshRecommendations()
 }
 </script>
 
@@ -103,6 +115,44 @@ function goToOperaType(operaType: string): void {
           >
             <template #icon>
               <van-icon name="music-o" class="track-icon" />
+            </template>
+            <template #right-icon>
+              <van-icon name="play-circle-o" class="play-icon" />
+            </template>
+          </van-cell>
+        </van-cell-group>
+      </section>
+
+      <section v-if="!isSearching && recommendedTracks.length > 0" class="recommend-section">
+        <div class="recommend-header">
+          <h3 class="recommend-title">
+            <van-icon name="fire-o" class="recommend-icon" />
+            随机推荐
+          </h3>
+          <div
+            class="refresh-btn"
+            role="button"
+            aria-label="刷新推荐"
+            @click="handleRefreshRecommendations"
+          >
+            <van-icon name="replay" class="refresh-icon" />
+            <span class="refresh-text">换一批</span>
+          </div>
+        </div>
+
+        <van-cell-group inset>
+          <van-cell
+            v-for="track in recommendedTracks"
+            :key="track.id"
+            :title="track.title"
+            is-link
+            @click="goToPlay(track)"
+          >
+            <template #icon>
+              <van-icon name="music-o" class="track-icon" />
+            </template>
+            <template #label>
+              <van-tag type="primary">{{ track.operaType }}</van-tag>
             </template>
             <template #right-icon>
               <van-icon name="play-circle-o" class="play-icon" />
@@ -233,5 +283,56 @@ function goToOperaType(operaType: string): void {
 .empty-text {
   font-size: 14px;
   color: #969799;
+}
+
+.recommend-section {
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.recommend-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 8px;
+}
+
+.recommend-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #323233;
+  margin: 0;
+}
+
+.recommend-icon {
+  font-size: 18px;
+  color: #ee0a24;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.refresh-btn:active {
+  background-color: #f7f8fa;
+}
+
+.refresh-icon {
+  font-size: 14px;
+  color: #1989fa;
+}
+
+.refresh-text {
+  font-size: 13px;
+  color: #1989fa;
 }
 </style>

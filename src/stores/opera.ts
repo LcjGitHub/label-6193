@@ -13,6 +13,9 @@ export const useOperaStore = defineStore('opera', () => {
   /** 搜索关键词 */
   const searchKeyword = ref('')
 
+  /** 推荐曲目列表 */
+  const recommendedTracks = ref<OperaTrack[]>([])
+
   /** 按剧种分组的曲目列表 */
   const groupedTracks = computed<OperaGroup[]>(() => {
     const groupMap = new Map<string, OperaGroup>()
@@ -95,9 +98,43 @@ export const useOperaStore = defineStore('opera', () => {
     return groupedTracks.value.find((group) => group.operaType === operaType)
   }
 
+  /**
+   * 从数组中随机选取一个元素
+   * @param arr - 源数组
+   * @returns 随机选取的元素
+   */
+  function getRandomItem<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)]
+  }
+
+  /**
+   * 生成随机推荐曲目
+   * 从全部曲目中随机抽取三条不同剧种的曲目
+   */
+  function generateRecommendations(): void {
+    const groups = groupedTracks.value
+    if (groups.length === 0) {
+      recommendedTracks.value = []
+      return
+    }
+
+    const shuffledGroups = [...groups].sort(() => Math.random() - 0.5)
+    const selectedGroups = shuffledGroups.slice(0, Math.min(3, shuffledGroups.length))
+
+    recommendedTracks.value = selectedGroups.map((group) => getRandomItem(group.tracks))
+  }
+
+  /**
+   * 刷新推荐曲目列表
+   */
+  function refreshRecommendations(): void {
+    generateRecommendations()
+  }
+
   return {
     tracks,
     searchKeyword,
+    recommendedTracks,
     groupedTracks,
     filteredGroupedTracks,
     hasSearchResult,
@@ -106,5 +143,7 @@ export const useOperaStore = defineStore('opera', () => {
     setSearchKeyword,
     getTrackById,
     getGroupByOperaType,
+    generateRecommendations,
+    refreshRecommendations,
   }
 })
