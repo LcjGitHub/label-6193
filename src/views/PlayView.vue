@@ -29,6 +29,18 @@ const hasPrev = computed(() => prevTrack.value !== undefined)
 
 const hasNext = computed(() => nextTrack.value !== undefined)
 
+const prevAriaLabel = computed(() =>
+  hasPrev.value && prevTrack.value
+    ? `播放上一曲，${prevTrack.value.title}`
+    : '已是第一首，无法上一曲',
+)
+
+const nextAriaLabel = computed(() =>
+  hasNext.value && nextTrack.value
+    ? `播放下一曲，${nextTrack.value.title}`
+    : '已是最后一首，无法下一曲',
+)
+
 /**
  * 返回上一页
  */
@@ -170,21 +182,23 @@ onBeforeUnmount(() => {
             class="control-btn prev-btn"
             :disabled="!hasPrev"
             :class="{ disabled: !hasPrev }"
+            :aria-label="prevAriaLabel"
             @click="handlePrev"
           >
-            <van-icon name="arrow-left" />
-            <span>上一曲</span>
-            <span v-if="prevTrack" class="track-name">{{ prevTrack.title }}</span>
+            <van-icon name="arrow-left" class="control-icon" />
+            <span class="control-label">上一曲</span>
+            <span v-if="prevTrack" class="control-track-name">{{ prevTrack.title }}</span>
           </button>
           <button
             class="control-btn next-btn"
             :disabled="!hasNext"
             :class="{ disabled: !hasNext }"
+            :aria-label="nextAriaLabel"
             @click="handleNext"
           >
-            <span v-if="nextTrack" class="track-name">{{ nextTrack.title }}</span>
-            <span>下一曲</span>
-            <van-icon name="arrow" />
+            <van-icon name="arrow" class="control-icon" />
+            <span class="control-label">下一曲</span>
+            <span v-if="nextTrack" class="control-track-name">{{ nextTrack.title }}</span>
           </button>
         </div>
 
@@ -313,26 +327,26 @@ onBeforeUnmount(() => {
   align-items: flex-end;
 }
 
-.control-btn .van-icon {
+.control-icon {
   font-size: 20px;
   color: #1989fa;
 }
 
-.control-btn.disabled .van-icon {
+.control-btn.disabled .control-icon {
   color: #969799;
 }
 
-.control-btn span:nth-child(2) {
+.control-label {
   font-size: 14px;
   font-weight: 500;
   color: #323233;
 }
 
-.control-btn.disabled span:nth-child(2) {
+.control-btn.disabled .control-label {
   color: #969799;
 }
 
-.track-name {
+.control-track-name {
   font-size: 12px;
   color: #969799;
   max-width: 100%;
